@@ -1,19 +1,15 @@
 package com.example.basicboard.board.controller;
 
 
-import com.example.basicboard.board.dto.BoardRequestDto;
-import com.example.basicboard.board.dto.BoardResponseDto;
+import com.example.basicboard.board.dto.BoardRequestDTO;
 import com.example.basicboard.board.service.BoardService;
 import com.example.basicboard.common.util.Message;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class BoardController {
 
@@ -27,14 +23,14 @@ public class BoardController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Message> post(@RequestBody BoardRequestDto boardRequestDto){
+    public ResponseEntity<Message> post(@RequestBody BoardRequestDTO boardRequestDto){
 
         return boardService.boardCreate(boardRequestDto);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Message> update(@PathVariable Long id, @RequestBody BoardRequestDto boardRequestDto){
+    public ResponseEntity<Message> update(@PathVariable Long id, @RequestBody BoardRequestDTO boardRequestDto){
         return boardService.boardUpdate(id, boardRequestDto);
     }
     @DeleteMapping("/{id}")

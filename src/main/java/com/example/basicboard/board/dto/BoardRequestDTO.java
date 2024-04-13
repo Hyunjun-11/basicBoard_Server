@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BoardRequestDto {
+public class BoardRequestDTO {
     private Long id;
     private String title;
     private String author;

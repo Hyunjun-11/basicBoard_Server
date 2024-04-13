@@ -1,12 +1,9 @@
 package com.example.basicboard.board.Entity;
 
 
-import com.example.basicboard.board.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity

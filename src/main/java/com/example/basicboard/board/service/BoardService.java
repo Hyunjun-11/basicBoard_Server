@@ -2,7 +2,7 @@ package com.example.basicboard.board.service;
 
 
 import com.example.basicboard.board.Entity.Board;
-import com.example.basicboard.board.dto.BoardRequestDto;
+import com.example.basicboard.board.dto.BoardRequestDTO;
 import com.example.basicboard.board.repository.BoardRepository;
 import com.example.basicboard.common.util.Message;
 import com.example.basicboard.common.util.StatusEnum;
@@ -37,7 +37,7 @@ public class BoardService {
 
     //게시글작성
     @Transactional
-    public ResponseEntity<Message> boardCreate(BoardRequestDto requestDto){
+    public ResponseEntity<Message> boardCreate(BoardRequestDTO requestDto){
 
         Board board= Board.builder()
                 .title(requestDto.getTitle())
@@ -53,7 +53,7 @@ public class BoardService {
 
     //게시글 수정
     @Transactional
-    public ResponseEntity<Message> boardUpdate(Long id,BoardRequestDto requestDto){
+    public ResponseEntity<Message> boardUpdate(Long id, BoardRequestDTO requestDto){
 
         validateBoard(requestDto);
 
@@ -80,7 +80,7 @@ public class BoardService {
 
     }
 
-    private void validateBoard(BoardRequestDto requestDto) {
+    private void validateBoard(BoardRequestDTO requestDto) {
         System.out.println("게시글 검증단계");
 
         // 유효성 검사 로직 추가
@@ -91,7 +91,7 @@ public class BoardService {
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다"));
     }
 
-    private void updateBoardFields(Board board, BoardRequestDto requestDto) {
+    private void updateBoardFields(Board board, BoardRequestDTO requestDto) {
         if (requestDto.getTitle() != null) {
             board.setTitle(requestDto.getTitle());
         }
