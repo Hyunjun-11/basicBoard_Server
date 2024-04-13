@@ -1,6 +1,7 @@
 package com.example.basicboard.board.Entity;
 
 
+import com.example.basicboard.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,5 +33,11 @@ public class Board extends TimeStamped{
 
     @Column(nullable = false)
     private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+
 
 }
