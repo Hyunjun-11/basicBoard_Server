@@ -37,7 +37,7 @@ public class BoardService {
 
     //게시글작성
     @Transactional
-    public ResponseEntity<Message> BoardCreate(BoardRequestDto requestDto){
+    public ResponseEntity<Message> boardCreate(BoardRequestDto requestDto){
 
         Board board= Board.builder()
                 .title(requestDto.getTitle())
@@ -51,19 +51,31 @@ public class BoardService {
 
     }
 
+    //게시글 수정
     @Transactional
-    public ResponseEntity<Message> BoardUpdate(Long id,BoardRequestDto requestDto){
+    public ResponseEntity<Message> boardUpdate(Long id,BoardRequestDto requestDto){
 
         validateBoard(requestDto);
 
-        Board board = boardRepository.findById(id).orElseThrow(()->new EntityNotFoundException("게시글을 찾을 수 없습니다"));
+        Board board = findBoardById(id);
 
-        board.setTitle(requestDto.getTitle());
-        board.setContent(requestDto.getContent());
-        board.setDate(requestDto.getDate());
+        updateBoardFields(board,requestDto);
+
+
         boardRepository.save(board);
 
         Message message = Message.setSuccess(StatusEnum.OK,"게시글 수정성공",board);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+
+    }
+
+    @Transactional
+    public ResponseEntity<Message> boardDelete(Long id) {
+
+        Board board = findBoardById(id);
+        boardRepository.delete(board);
+
+        Message message = Message.setSuccess(StatusEnum.OK,"게시글 삭제성공");
         return new ResponseEntity<>(message, HttpStatus.OK);
 
     }
@@ -72,6 +84,23 @@ public class BoardService {
         System.out.println("게시글 검증단계");
 
         // 유효성 검사 로직 추가
+    }
+
+    private Board findBoardById(Long id) {
+        return boardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다"));
+    }
+
+    private void updateBoardFields(Board board, BoardRequestDto requestDto) {
+        if (requestDto.getTitle() != null) {
+            board.setTitle(requestDto.getTitle());
+        }
+        if (requestDto.getContent() != null) {
+            board.setContent(requestDto.getContent());
+        }
+        if (requestDto.getDate() != null) {
+            board.setDate(requestDto.getDate());
+        }
     }
 
 
