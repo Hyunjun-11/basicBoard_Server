@@ -11,7 +11,9 @@ public enum StatusEnum {
     OK(HttpStatus.OK, "OK"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad Request"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "Not Found"),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error"),
+    CONFLICT(HttpStatus.CONFLICT, "Duplicate"),
+    ;
 
 
     private final HttpStatus status;

@@ -1,18 +1,17 @@
 package com.example.basicboard.member.entity;
 
 
+import com.example.basicboard.board.Entity.TimeStamped;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+@Builder
+public class Member extends TimeStamped {
 
     public enum Gender {
         MALE,
@@ -24,6 +23,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String memberId;
 
     @Column(nullable = false)
     private String memberName;
@@ -32,7 +33,7 @@ public class Member {
     private String memberPhone;
 
     @Column(nullable = false)
-    private Gender Gender;
+    private Gender gender;
 
     @Column(nullable = false)
     private String password;

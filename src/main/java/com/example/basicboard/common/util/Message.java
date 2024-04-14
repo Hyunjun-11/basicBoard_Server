@@ -17,20 +17,23 @@ public class Message {
     private Object data;
 
 
-
-    public Message(int statusCode, String message){
+    public Message(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }
+
     @Override
     public String toString() {
         return "Message{statusCode=" + statusCode + ", message='" + message + "', data='" + data + "'}";
     }
 
-    public static  Message setSuccess(StatusEnum statusEnum, String message, Object object){
+    public static Message setSuccess(StatusEnum statusEnum, String message, Object object) {
         return new Message(statusEnum.getStatus().value(), message, object);
     }
-    public static  Message setSuccess(StatusEnum statusEnum, String message){
+
+    public static Message setSuccess(StatusEnum statusEnum, String message) {
         return new Message(statusEnum.getStatus().value(), message);
     }
+
+
 }

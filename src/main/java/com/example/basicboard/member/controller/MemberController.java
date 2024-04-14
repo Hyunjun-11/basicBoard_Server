@@ -3,8 +3,8 @@ package com.example.basicboard.member.controller;
 
 import com.example.basicboard.common.util.Message;
 import com.example.basicboard.member.dto.MemberRequestDTO;
-import com.example.basicboard.member.entity.Member;
-import com.example.basicboard.member.service.MemberService;
+import com.example.basicboard.member.dto.SignUpRequestDTO;
+import com.example.basicboard.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/member")
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
 
 
 
@@ -32,10 +32,15 @@ public class MemberController {
     }
 
     @PostMapping("/singnUp")
-    public ResponseEntity<Message> singUp(@RequestBody MemberRequestDTO requestDTO){
+    public ResponseEntity<Message> singUp(@RequestBody SignUpRequestDTO requestDTO){
 
 
-        return null;
+        return memberService.signUp(requestDTO);
+    }
+
+    @PostMapping("/signIn")
+    public ResponseEntity<Message> signIn(@RequestBody MemberRequestDTO requestDTO){
+        return memberService.signIn(requestDTO);
     }
 
 }
