@@ -10,7 +10,16 @@ public interface MemberService {
 
 
     ResponseEntity<Message> readAll();
-    ResponseEntity<Message> readById(Long id );
+
+    ResponseEntity<Message> readById(Long id);
+
     ResponseEntity<Message> signUp(SignUpRequestDTO requestDTO);
+
     ResponseEntity<Message> signIn(MemberRequestDTO requestDTO);
+
+    ResponseEntity<Message> userInfoChange(MemberRequestDTO requestDTO);
+
+    ResponseEntity<Message> signOut(MemberRequestDTO requestDTO);
+
+    ResponseEntity<Message> withdrawn(MemberRequestDTO requestDTO);
 }

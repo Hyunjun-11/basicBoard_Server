@@ -18,29 +18,56 @@ public class MemberController {
     private final MemberServiceImpl memberService;
 
 
-
+    //회원전체조회
     @GetMapping("/")
-    public ResponseEntity<Message> readAll(){
+    public ResponseEntity<Message> readAll() {
 
         return memberService.readAll();
     }
+
+    //회원 단일조회
     @GetMapping("/{id}")
-    public ResponseEntity<Message> readById(@PathVariable Long id){
+    public ResponseEntity<Message> readById(@PathVariable Long id) {
 
         return memberService.readById(id);
 
     }
 
+    //회원가입
     @PostMapping("/singnUp")
-    public ResponseEntity<Message> singUp(@RequestBody SignUpRequestDTO requestDTO){
+    public ResponseEntity<Message> singUp(@RequestBody SignUpRequestDTO requestDTO) {
 
 
         return memberService.signUp(requestDTO);
     }
 
+    //회원정보 변경
+    @PutMapping("/userInfo")
+    public ResponseEntity<Message> userInfoChange(@RequestBody MemberRequestDTO requestDTO) {
+
+
+        return null;
+    }
+
+    //로그인
     @PostMapping("/signIn")
-    public ResponseEntity<Message> signIn(@RequestBody MemberRequestDTO requestDTO){
+    public ResponseEntity<Message> signIn(@RequestBody MemberRequestDTO requestDTO) {
         return memberService.signIn(requestDTO);
     }
+
+    //로그아웃
+    @PostMapping("/signOut")
+    public ResponseEntity<Message> signOut(@RequestBody MemberRequestDTO requestDTO) {
+        return null;
+
+    }
+
+    //회원탈퇴(soft-delete)
+    @PostMapping("/withdrawn")
+    public ResponseEntity<Message> withdrawn(@RequestBody SignUpRequestDTO requestDTO) {
+        return null;
+
+    }
+
 
 }

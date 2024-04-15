@@ -37,5 +37,8 @@ public class Member extends TimeStamped {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private boolean withdrawn;
 }
 

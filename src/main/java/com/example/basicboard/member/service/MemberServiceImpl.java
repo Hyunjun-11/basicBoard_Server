@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -63,17 +64,53 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
+    //로그인
     public ResponseEntity<Message> signIn(MemberRequestDTO requestDTO) {
+        String memberId = requestDTO.getMemberId();
+        String password = requestDTO.getPassword();
+
+        Member member = findByMemberId(memberId);
+
+        if (!member.getPassword().equals(password)) {
+            Message message = Message.setSuccess(StatusEnum.BAD_REQUEST, "회원 정보가 올바르지 않습니다.");
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
+
+        // 로그인에 성공했을 경우 성공 메시지와 함께 회원 정보를 반환합니다.
+        MemberResponseDTO responseDTO = new MemberResponseDTO(member);
+        Message message = Message.setSuccess(StatusEnum.OK, "로그인 성공", responseDTO);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Message> userInfoChange(MemberRequestDTO requestDTO) {
         return null;
     }
 
-    //회원정보 검색 메서드
+    @Override
+    public ResponseEntity<Message> signOut(MemberRequestDTO requestDTO) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Message> withdrawn(MemberRequestDTO requestDTO) {
+        return null;
+    }
+
+    //Pk를 통한 회원정보 검색 메서드
     private Member findById(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("회원 정보를 찾을 수 없습니다."));
-        return member;
+        return memberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("회원 정보를 찾을 수 없습니다."));
 
     }
 
+    //MemberId를 통한 회원정보
+    private Member findByMemberId(String memberId) {
+        return memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("회원 정보를 찾을 수 없습니다."));
+    }
+
+
+    //회원이 존재하면true 아니면false
     private boolean isMemberExists(String memberId) {
         return memberRepository.findByMemberId(memberId).isPresent();
     }
