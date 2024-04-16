@@ -2,8 +2,8 @@ package com.example.basicboard.member.interfaces;
 
 import com.example.basicboard.common.util.Message;
 import com.example.basicboard.member.dto.MemberRequestDTO;
+import com.example.basicboard.member.dto.SignInRequestDTO;
 import com.example.basicboard.member.dto.SignUpRequestDTO;
-import com.example.basicboard.member.entity.Member;
 import org.springframework.http.ResponseEntity;
 
 public interface MemberService {
@@ -15,11 +15,11 @@ public interface MemberService {
 
     ResponseEntity<Message> signUp(SignUpRequestDTO requestDTO);
 
-    ResponseEntity<Message> signIn(MemberRequestDTO requestDTO);
+    ResponseEntity<Message> signIn(SignInRequestDTO requestDTO);
 
-    ResponseEntity<Message> userInfoChange(MemberRequestDTO requestDTO);
+    ResponseEntity<Message> userInfoChange(Long id, MemberRequestDTO requestDTO);
 
-    ResponseEntity<Message> signOut(MemberRequestDTO requestDTO);
+    ResponseEntity<Message> signOut(SignInRequestDTO requestDTO);
 
-    ResponseEntity<Message> withdrawn(MemberRequestDTO requestDTO);
+    ResponseEntity<Message> withdrawn(Long id, String password);
 }

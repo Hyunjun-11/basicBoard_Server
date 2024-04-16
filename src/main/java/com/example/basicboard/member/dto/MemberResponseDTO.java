@@ -6,11 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
 @AllArgsConstructor
 public class MemberResponseDTO {
 
+    private Long id;
 
     private String memberName;
 
@@ -20,9 +20,9 @@ public class MemberResponseDTO {
 
 
     public MemberResponseDTO(Member member) {
-
-        memberName = member.getMemberName();
-        gender = member.getGender();
-        memberPhone = member.getMemberPhone();
+        this.id = member.getId();
+        this.memberName = member.getMemberName();
+        this.gender = member.getGender();
+        this.memberPhone = member.getMemberPhone();
     }
 }
