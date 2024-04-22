@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -16,6 +17,6 @@ public class BoardResponseDTO {
     private Long id;
     private String title;
     private String content;
-    private Date date;
+    private LocalDateTime date;
 
 }

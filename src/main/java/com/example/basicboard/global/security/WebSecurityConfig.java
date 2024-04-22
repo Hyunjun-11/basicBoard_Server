@@ -1,15 +1,28 @@
 package com.example.basicboard.global.security;
 
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -23,21 +36,38 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf((auth) -> auth.disable())
-                .formLogin((auth) -> auth.disable())
-                .httpBasic((auth) -> auth.disable());
-        http
-                .authorizeRequests((auth) -> auth
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .anyRequest().authenticated());
 
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/loginPage")
+                        .loginProcessingUrl("/loginProc")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/loginFailed")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .successHandler((request, response, authentication) -> {
+                            System.out.println("authentication : " + authentication);
+                            response.sendRedirect("/login");
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            System.out.println("exception: " + exception.getMessage());
+                            response.sendRedirect("/login");
 
+                        })
+                        .permitAll()
+                );
 
         return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails user = User
+                .withUsername("user")
+                .password("{noop}1111")
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(user);
     }
 }

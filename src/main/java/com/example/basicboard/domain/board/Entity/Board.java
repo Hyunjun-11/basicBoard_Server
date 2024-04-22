@@ -5,7 +5,7 @@ import com.example.basicboard.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -32,7 +32,7 @@ public class Board extends TimeStamped {
     private int hits;
 
     @Column(nullable = false)
-    private Date date;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
