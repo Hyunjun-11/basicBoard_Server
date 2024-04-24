@@ -10,11 +10,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class Message {
+public class Message<T> {
 
     private int statusCode;
     private String message;
-    private Object data;
+    private T data;
 
 
     public Message(int statusCode, String message) {
@@ -27,12 +27,12 @@ public class Message {
         return "Message{statusCode=" + statusCode + ", message='" + message + "', data='" + data + "'}";
     }
 
-    public static Message setSuccess(StatusEnum statusEnum, String message, Object object) {
-        return new Message(statusEnum.getStatus().value(), message, object);
+    public static <T> Message<T> setSuccess(StatusEnum statusEnum, String message, T data) {
+        return new Message<>(statusEnum.getStatus().value(), message, data);
     }
 
-    public static Message setSuccess(StatusEnum statusEnum, String message) {
-        return new Message(statusEnum.getStatus().value(), message);
+    public static <T> Message<T> setSuccess(StatusEnum statusEnum, String message) {
+        return new Message<>(statusEnum.getStatus().value(), message);
     }
 
 

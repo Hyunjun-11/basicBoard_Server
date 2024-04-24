@@ -17,21 +17,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService {
+public class MemberServiceImpl implements MemberService<MemberResponseDTO> {
 
 
     private final MemberRepository memberRepository;
 
     //멤버 전체조회
     @Override
-    public ResponseEntity<Message> readAll() {
+    public ResponseEntity<Message<List<MemberResponseDTO>>> readAll() {
 
         List<Member> members = memberRepository.findAll();
-        Message message = Message.setSuccess(StatusEnum.OK, "멤버 전체 조회 성공", members);
+        List<MemberResponseDTO> memberResponseDTOS = new ArrayList<>();
+        for (Member member : members) {
+            memberResponseDTOS.add(new MemberResponseDTO(member));
+        }
+        Message<List<MemberResponseDTO>> message = Message.setSuccess(StatusEnum.OK, "멤버 전체 조회 성공", memberResponseDTOS);
 
         return new ResponseEntity<>(message, HttpStatus.OK);
 
@@ -39,13 +44,13 @@ public class MemberServiceImpl implements MemberService {
 
     //멤버 단일조회
     @Override
-    public ResponseEntity<Message> readById(Long id) {
+    public ResponseEntity<Message<MemberResponseDTO>> readById(Long id) {
 
         Member member = findById(id);
 
         MemberResponseDTO responseDTO = new MemberResponseDTO(member);
 
-        Message message = Message.setSuccess(StatusEnum.OK, " 멤버 단일 조회 성공", responseDTO);
+        Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.OK, " 멤버 단일 조회 성공", responseDTO);
 
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
@@ -53,16 +58,16 @@ public class MemberServiceImpl implements MemberService {
     //회원가입
     @Override
     @Transactional
-    public ResponseEntity<Message> signUp(SignUpRequestDTO requestDTO) {
+    public ResponseEntity<Message<MemberResponseDTO>> signUp(SignUpRequestDTO requestDTO) {
 
         if (isMemberExists(requestDTO.getMemberId())) {
-            Message message = Message.setSuccess(StatusEnum.CONFLICT, "이미 존재하는 회원입니다.");
+            Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.CONFLICT, "이미 존재하는 회원입니다.");
             return new ResponseEntity<>(message, HttpStatus.CONFLICT);
         }
 
         Member member = createMember(requestDTO);
         memberRepository.save(member);
-        Message message = Message.setSuccess(StatusEnum.OK, "회원가입 성공");
+        Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.OK, "회원가입 성공");
         return new ResponseEntity<>(message, HttpStatus.OK);
 
     }
@@ -70,27 +75,27 @@ public class MemberServiceImpl implements MemberService {
 
     //로그인
     @Override
-    public ResponseEntity<Message> signIn(SignInRequestDTO requestDTO) {
+    public ResponseEntity<Message<MemberResponseDTO>> signIn(SignInRequestDTO requestDTO) {
         String memberId = requestDTO.getMemberId();
         String password = requestDTO.getPassword();
 
         Member member = findByMemberId(memberId);
 
         if (!member.getPassword().equals(password)) {
-            Message message = Message.setSuccess(StatusEnum.BAD_REQUEST, "회원 정보가 올바르지 않습니다.");
+            Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.BAD_REQUEST, "회원 정보가 올바르지 않습니다.");
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
 
         // 로그인에 성공했을 경우 성공 메시지와 함께 회원 정보를 반환합니다.
         MemberResponseDTO responseDTO = new MemberResponseDTO(member);
-        Message message = Message.setSuccess(StatusEnum.OK, "로그인 성공", responseDTO);
+        Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.OK, "로그인 성공", responseDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     //회원정보 변경
     @Override
     @Transactional
-    public ResponseEntity<Message> userInfoChange(Long id, MemberRequestDTO requestDTO) {
+    public ResponseEntity<Message<MemberResponseDTO>> userInfoChange(Long id, MemberRequestDTO requestDTO) {
 
 
         Member member = findById(id);
@@ -107,22 +112,22 @@ public class MemberServiceImpl implements MemberService {
 
     //로그아웃
     @Override
-    public ResponseEntity<Message> signOut(SignInRequestDTO requestDTO) {
-        Message message = Message.setSuccess(StatusEnum.OK, "로그아웃 성공");
+    public ResponseEntity<Message<String>> signOut(SignInRequestDTO requestDTO) {
+        Message<String> message = Message.setSuccess(StatusEnum.OK, "로그아웃 성공");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     //회원탈퇴
     @Override
     @Transactional
-    public ResponseEntity<Message> withdrawn(Long id, String password) {
+    public ResponseEntity<Message<String>> withdrawn(Long id, String password) {
         Member member = findById(id);
         if (checkPassword(member, password)) {
             member.setWithdrawn(true);
             member.setMemberId(member.getMemberId() + "withdrawn");
             memberRepository.save(member);
         }
-        Message message = Message.setSuccess(StatusEnum.OK, "회원 탈퇴 성공");
+        Message<String> message = Message.setSuccess(StatusEnum.OK, "회원 탈퇴 성공");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 

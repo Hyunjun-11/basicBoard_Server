@@ -1,6 +1,7 @@
 package com.example.basicboard.domain.board.dto;
 
 
+import com.example.basicboard.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class BoardRequestDTO {
     private String author;
     private String content;
     private LocalDateTime date;
-    private int hits;
+    private Integer hits;
 
 
 }

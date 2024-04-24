@@ -29,13 +29,13 @@ public class Board extends TimeStamped {
     private String author;
 
     @Column
-    private int hits;
+    private Integer hits;
 
     @Column(nullable = false)
     private LocalDateTime date;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
 
