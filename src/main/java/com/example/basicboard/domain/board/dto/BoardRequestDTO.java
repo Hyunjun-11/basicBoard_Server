@@ -1,8 +1,6 @@
 package com.example.basicboard.domain.board.dto;
 
 
-import com.example.basicboard.domain.member.entity.Member;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +8,6 @@ import lombok.Setter;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter

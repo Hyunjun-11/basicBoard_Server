@@ -1,7 +1,6 @@
 package com.example.basicboard.domain.member.interfaces;
 
 import com.example.basicboard.domain.member.dto.MemberResponseDTO;
-import com.example.basicboard.domain.member.entity.Member;
 import com.example.basicboard.global.message.Message;
 import com.example.basicboard.domain.member.dto.MemberRequestDTO;
 import com.example.basicboard.domain.member.dto.SignInRequestDTO;
