@@ -19,10 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService<MemberResponseDTO> {
+public class MemberServiceImpl implements MemberService {
 
 
     private final MemberRepository memberRepository;
@@ -67,7 +68,8 @@ public class MemberServiceImpl implements MemberService<MemberResponseDTO> {
 
         Member member = createMember(requestDTO);
         memberRepository.save(member);
-        Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.OK, "회원가입 성공");
+        MemberResponseDTO responseDTO = new MemberResponseDTO(member);
+        Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.OK, "회원가입 성공", responseDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
 
     }
@@ -79,15 +81,15 @@ public class MemberServiceImpl implements MemberService<MemberResponseDTO> {
         String memberId = requestDTO.getMemberId();
         String password = requestDTO.getPassword();
 
-        Member member = findByMemberId(memberId);
-
-        if (!member.getPassword().equals(password)) {
+        Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
+        // 회원이 아이디가 일치하지않거나 비밀번호가 일치하지않을때
+        if (optionalMember.isEmpty() || !optionalMember.get().getPassword().equals(password)) {
             Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.BAD_REQUEST, "회원 정보가 올바르지 않습니다.");
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
 
-        // 로그인에 성공했을 경우 성공 메시지와 함께 회원 정보를 반환합니다.
-        MemberResponseDTO responseDTO = new MemberResponseDTO(member);
+        // 로그인 성공
+        MemberResponseDTO responseDTO = new MemberResponseDTO(optionalMember.get());
         Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.OK, "로그인 성공", responseDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
@@ -97,14 +99,15 @@ public class MemberServiceImpl implements MemberService<MemberResponseDTO> {
     @Transactional
     public ResponseEntity<Message<MemberResponseDTO>> userInfoChange(Long id, MemberRequestDTO requestDTO) {
 
-
+        //멤버아이디와 principal 일치 확인로직작성하기
         Member member = findById(id);
+
         member.setMemberName(requestDTO.getMemberName());
         member.setMemberPhone(requestDTO.getMemberPhone());
         memberRepository.save(member);
 
         MemberResponseDTO responseDTO = new MemberResponseDTO(member);
-        Message message = Message.setSuccess(StatusEnum.OK, "회원정보 변경 성공", responseDTO);
+        Message<MemberResponseDTO> message = Message.setSuccess(StatusEnum.OK, "회원정보 변경 성공", responseDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
 
 
@@ -137,14 +140,7 @@ public class MemberServiceImpl implements MemberService<MemberResponseDTO> {
 
     }
 
-    //MemberId를 통한 회원정보
-    private Member findByMemberId(String memberId) {
-        return memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("회원 정보를 찾을 수 없습니다."));
-    }
-
-
-    //회원이 존재하면true 아니면false
+    //회원이 존재하면 true 아니면 false
     private boolean isMemberExists(String memberId) {
         return memberRepository.findByMemberId(memberId).isPresent();
     }

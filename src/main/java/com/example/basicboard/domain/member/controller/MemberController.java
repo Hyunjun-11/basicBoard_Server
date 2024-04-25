@@ -8,6 +8,7 @@ import com.example.basicboard.domain.member.dto.SignInRequestDTO;
 import com.example.basicboard.domain.member.service.MemberServiceImpl;
 import com.example.basicboard.domain.member.dto.MemberRequestDTO;
 import com.example.basicboard.domain.member.dto.SignUpRequestDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,7 @@ public class MemberController {
 
     //회원가입
     @PostMapping("/singnUp")
-    public ResponseEntity<Message<MemberResponseDTO>> singUp(@RequestBody SignUpRequestDTO requestDTO) {
+    public ResponseEntity<Message<MemberResponseDTO>> singUp(@RequestBody @Valid SignUpRequestDTO requestDTO) {
         return memberService.signUp(requestDTO);
     }
 

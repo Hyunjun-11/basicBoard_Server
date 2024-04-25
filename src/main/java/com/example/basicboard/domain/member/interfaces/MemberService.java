@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface MemberService<MemberResponseDTO> {
+public interface MemberService {
 
     ResponseEntity<Message<List<MemberResponseDTO>>> readAll();
 
